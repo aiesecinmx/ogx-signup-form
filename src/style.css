@@ -1,2 +1,9 @@
-@import "tailwindcss";
-@config "../tailwind.config.ts";
+@layer theme, base, mui, components, utilities;
+
+@import '@fontsource/lato';
+@import '@fontsource-variable/montserrat';
+@import 'tailwindcss';
+
+@theme inline {
+  --color-primary: rgb(var(--mui-palette-primary-mainChannel));
+}

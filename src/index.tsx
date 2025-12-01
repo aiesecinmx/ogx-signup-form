@@ -8,7 +8,7 @@ import { createTheme } from '@mui/material/styles';
 
 export function App() {
   return (
-    <div className="flex justify-center m-8 bg-white">
+    <div className="flex justify-center my-8 mx-4 bg-white">
       <SignupForm />
     </div>
   );
@@ -21,7 +21,8 @@ const theme = createTheme({
       main: '#037ef3',
     },
     text: {
-      secondary: '#575F6E',
+      secondary: '#575f6e',
+      disabled: '#e2e4e5',
     },
   },
   typography: {

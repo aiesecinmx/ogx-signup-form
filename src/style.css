@@ -6,4 +6,6 @@
 
 @theme inline {
   --color-primary: rgb(var(--mui-palette-primary-mainChannel));
+  --color-text-disabled: var(--mui-palette-text-disabled);
 }
+

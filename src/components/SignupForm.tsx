@@ -14,11 +14,17 @@ import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import InputAdornment from "@mui/material/InputAdornment";
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import LockOutlineIcon from '@mui/icons-material/LockOutline';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PhoneIcon from '@mui/icons-material/Phone';
 import Autocomplete from "@mui/material/Autocomplete";
 import CheckIcon from '@mui/icons-material/Check';
 import { universities } from "../constants/universities";
 import { backgrounds } from "../constants/backgrounds";
+import { IconButton } from "@mui/material";
+
+const sectionOneName = "Datos personales";
+const sectionTwoName = "Acerca de ti";
+
 
 // TODO: Maybe rearrange items for larger screens? (Check with Joy)
 export default function SignupForm() {
@@ -41,15 +47,27 @@ export default function SignupForm() {
 
   return (
     <div className="flex flex-col items-center w-full max-w-lg">
-      <div className="w-1/2 mb-10">
-        <Stepper activeStep={activeStep}>
-          <Step>
-            <StepLabel slotProps={stepLabelSlotProps}>Datos Personales</StepLabel>
-          </Step>
-          <Step>
-            <StepLabel slotProps={stepLabelSlotProps}>Cuéntanos sobre ti</StepLabel>
-          </Step>
-        </Stepper>
+      <div className="flex mb-10 w-full items-center justify-center px-4">
+        <div className="mr-auto">
+          <IconButton aria-label="Regresar" disabled={activeStep === 0} onClick={handleBack}>
+            <ArrowBackIcon />
+          </IconButton>
+        </div>
+        <div className="basis-1/2">
+          <Stepper activeStep={activeStep}>
+            <Step>
+              <StepLabel slotProps={stepLabelSlotProps}>{sectionOneName}</StepLabel>
+            </Step>
+            <Step>
+              <StepLabel slotProps={stepLabelSlotProps}>{sectionTwoName}</StepLabel>
+            </Step>
+          </Stepper>
+        </div>
+        <div className="invisible ml-auto">
+          <IconButton>
+            <ArrowBackIcon />
+          </IconButton>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -73,9 +91,14 @@ export default function SignupForm() {
               </Typography>
             </div>
 
-            <Typography variant="h6" className="font-semibold">
-              Datos de Contacto
-            </Typography>
+            <section>
+              <Typography variant="h6" className="font-semibold">
+                {sectionOneName}
+              </Typography>
+              <Typography color="textSecondary" className="font-[Montserrat_Variable] font-light">
+                Crea tu cuenta para nuesto portal de oportunidades
+              </Typography>
+            </section>
 
             <form className="flex flex-col gap-6">
               <TextField
@@ -110,6 +133,41 @@ export default function SignupForm() {
                   <MenuItem value={30}>30</MenuItem>
                 </Select>
               </FormControl>
+
+              <div className="flex flex-col border border-text-disabled rounded-md p-6 gap-4">
+                <TextField
+                  required
+                  label="Correo electrónico"
+                  id="email"
+                  type="email"
+                  autoComplete="off"
+                  variant="standard"
+                  slotProps={{
+                    input: {
+                      startAdornment: <InputAdornment position="start">
+                        <MailOutlineIcon />
+                      </InputAdornment>,
+                    },
+                  }}
+                />
+
+                <TextField
+                  required
+                  label="Contraseña"
+                  type="password"
+                  name="new-password"
+                  id="new-password"
+                  autoComplete="new-password"
+                  variant="standard"
+                  slotProps={{
+                    input: {
+                      startAdornment: <InputAdornment position="start">
+                        <LockOutlineIcon />
+                      </InputAdornment>,
+                    },
+                  }}
+                />
+              </div>
               <Button id="next-button" variant="outlined" className="normal-case mt-6" endIcon={<ArrowRightAltIcon />} onClick={handleNext}>
                 Siguiente
               </Button>
@@ -119,41 +177,6 @@ export default function SignupForm() {
 
         {activeStep === 1 && (
           <form className="flex flex-col gap-6">
-
-            <div className="flex flex-col border border-text-disabled rounded-md p-6 gap-4">
-              <TextField
-                required
-                label="Correo electrónico"
-                id="email"
-                type="email"
-                autoComplete="off"
-                variant="standard"
-                slotProps={{
-                  input: {
-                    startAdornment: <InputAdornment position="start">
-                      <MailOutlineIcon />
-                    </InputAdornment>,
-                  },
-                }}
-              />
-
-              <TextField
-                required
-                label="Contraseña"
-                type="password"
-                name="new-password"
-                id="new-password"
-                autoComplete="new-password"
-                variant="standard"
-                slotProps={{
-                  input: {
-                    startAdornment: <InputAdornment position="start">
-                      <LockOutlineIcon />
-                    </InputAdornment>,
-                  },
-                }}
-              />
-            </div>
 
             <TextField
               required
@@ -170,19 +193,6 @@ export default function SignupForm() {
                 },
               }}
             />
-
-            <FormControl fullWidth variant="standard">
-              <InputLabel id="program-select-label">Programa de Interés</InputLabel>
-              <Select
-                labelId="program-select-label"
-                id="program-select"
-                label="Programa de Interés"
-              >
-                <MenuItem value="oGV">Voluntario Global</MenuItem>
-                <MenuItem value="oGTa">Talento Global (Prácticas Profesionales)</MenuItem>
-                <MenuItem value="oGTe">Profesor Global</MenuItem>
-              </Select>
-            </FormControl>
 
             <Autocomplete
               disablePortal

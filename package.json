@@ -13,7 +13,8 @@
     "@fontsource/lato": "^5.2.7",
     "@mui/icons-material": "^7.3.5",
     "@mui/material": "^7.3.5",
-    "preact": "^10.26.9"
+    "preact": "^10.26.9",
+    "zustand": "^5.0.11"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",

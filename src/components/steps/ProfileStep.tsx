@@ -1,5 +1,6 @@
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -16,6 +17,7 @@ export default function ProfileStep() {
   const studyLevel = useSignupStore((s) => s.studyLevel);
   const englishLevel = useSignupStore((s) => s.englishLevel);
   const referralSource = useSignupStore((s) => s.referralSource);
+  const errors = useSignupStore((s) => s.errors);
   const loading = useSignupStore((s) => s.loading);
   const setUniversity = useSignupStore((s) => s.setUniversity);
   const setCareer = useSignupStore((s) => s.setCareer);
@@ -24,6 +26,7 @@ export default function ProfileStep() {
   const setReferralSource = useSignupStore((s) => s.setReferralSource);
   const setLoading = useSignupStore((s) => s.setLoading);
   const submitForm = useSignupStore((s) => s.submitForm);
+  const handleBlur = useSignupStore((s) => s.handleBlur);
 
   const handleSubmit = () => {
     setLoading(true);
@@ -37,8 +40,9 @@ export default function ProfileStep() {
         options={universities}
         value={university}
         onChange={(_event, value: string | null) => setUniversity(value)}
+        onBlur={() => handleBlur(1)}
         // @ts-ignore
-        renderInput={(params) => <TextField {...params} label="Universidad" variant="standard" placeholder="Selecciona una opción" />}
+        renderInput={(params) => <TextField {...params} label="Universidad" variant="standard" placeholder="Selecciona una opción" error={!!errors.university} helperText={errors.university} />}
       />
 
       <Autocomplete
@@ -46,11 +50,12 @@ export default function ProfileStep() {
         options={backgrounds}
         value={career}
         onChange={(_event, value: string | null) => setCareer(value)}
+        onBlur={() => handleBlur(1)}
         // @ts-ignore
-        renderInput={(params) => <TextField {...params} label="Carrera o Background Profesional" variant="standard" placeholder="Selecciona una opción" />}
+        renderInput={(params) => <TextField {...params} label="Carrera o Background Profesional" variant="standard" placeholder="Selecciona una opción" error={!!errors.career} helperText={errors.career} />}
       />
 
-      <FormControl fullWidth variant="standard">
+      <FormControl fullWidth variant="standard" error={!!errors.studyLevel}>
         <InputLabel id="study-level-label">Máximo Nivel de Estudios</InputLabel>
         <Select
           labelId="study-level-label"
@@ -58,6 +63,7 @@ export default function ProfileStep() {
           label="Máximo Nivel de Estudios"
           value={studyLevel}
           onChange={(e) => setStudyLevel((e.target as HTMLSelectElement).value)}
+          onBlur={() => handleBlur(1)}
         >
           <MenuItem value="Preparatoria">Preparatoria</MenuItem>
           <MenuItem value="Tecnico">Técnico</MenuItem>
@@ -65,9 +71,10 @@ export default function ProfileStep() {
           <MenuItem value="Maestría">Maestría</MenuItem>
           <MenuItem value="Doctorado">Doctorado</MenuItem>
         </Select>
+        <FormHelperText>{errors.studyLevel}</FormHelperText>
       </FormControl>
 
-      <FormControl fullWidth variant="standard">
+      <FormControl fullWidth variant="standard" error={!!errors.englishLevel}>
         <InputLabel id="english-level-label">Nivel de Inglés</InputLabel>
         <Select
           labelId="english-level-label"
@@ -75,14 +82,16 @@ export default function ProfileStep() {
           label="Nivel de Inglés"
           value={englishLevel}
           onChange={(e) => setEnglishLevel((e.target as HTMLSelectElement).value)}
+          onBlur={() => handleBlur(1)}
         >
           <MenuItem value="A">A1 - A2 (Básico)</MenuItem>
           <MenuItem value="B">B1 - B2 (Intermedio)</MenuItem>
           <MenuItem value="C">C1 - C2 (Avanzado)</MenuItem>
         </Select>
+        <FormHelperText>{errors.englishLevel}</FormHelperText>
       </FormControl>
 
-      <FormControl fullWidth variant="standard">
+      <FormControl fullWidth variant="standard" error={!!errors.referralSource}>
         <InputLabel id="source-label">¿Cómo te enteraste de AIESEC?</InputLabel>
         <Select
           labelId="source-label"
@@ -90,6 +99,7 @@ export default function ProfileStep() {
           label="¿Cómo te enteraste de AIESEC?"
           value={referralSource}
           onChange={(e) => setReferralSource((e.target as HTMLSelectElement).value)}
+          onBlur={() => handleBlur(1)}
         >
           <MenuItem value="Facebook">Facebook</MenuItem>
           <MenuItem value="Instagram">Instagram</MenuItem>
@@ -103,6 +113,7 @@ export default function ProfileStep() {
           <MenuItem value="Leaders Lab">Leaders Lab</MenuItem>
           <MenuItem value="Otro">Otro</MenuItem>
         </Select>
+        <FormHelperText>{errors.referralSource}</FormHelperText>
       </FormControl>
 
       <Button

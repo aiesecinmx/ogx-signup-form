@@ -1,6 +1,7 @@
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -20,6 +21,7 @@ export default function PersonalDataStep() {
   const age = useSignupStore((s) => s.age);
   const email = useSignupStore((s) => s.email);
   const password = useSignupStore((s) => s.password);
+  const errors = useSignupStore((s) => s.errors);
   const setConsent = useSignupStore((s) => s.setConsent);
   const setFirstName = useSignupStore((s) => s.setFirstName);
   const setLastName = useSignupStore((s) => s.setLastName);
@@ -29,6 +31,7 @@ export default function PersonalDataStep() {
   const phone = useSignupStore((s) => s.phone);
   const setPhone = useSignupStore((s) => s.setPhone);
   const goNext = useSignupStore((s) => s.goNext);
+  const handleBlur = useSignupStore((s) => s.handleBlur);
 
   return (
     <>
@@ -41,14 +44,20 @@ export default function PersonalDataStep() {
         </Typography>
       </section>
 
-      <div className="flex p-2 pr-5 bg-primary/10 rounded-md items-center">
-        <Checkbox
-          checked={consent}
-          onChange={(e) => setConsent((e.target as HTMLInputElement).checked)}
-        />
-        <Typography variant="caption" color="textSecondary" className="font-[Montserrat_Variable] tracking-tight">
-          Autorizo que mis datos se procesen de acuerdo con el <a href="#" target="_blank" className="font-bold text-primary">aviso de privacidad</a> de AIESEC&nbsp;México,&nbsp;A.C.
-        </Typography>
+      <div className="flex flex-col">
+        <div className="flex p-2 pr-5 bg-primary/10 rounded-md items-center">
+          <Checkbox
+            checked={consent}
+            onChange={(e) => setConsent((e.target as HTMLInputElement).checked)}
+            onBlur={() => handleBlur(0)}
+          />
+          <Typography variant="caption" color="textSecondary" className="font-[Montserrat_Variable] tracking-tight">
+            Autorizo que mis datos se procesen de acuerdo con el <a href="#" target="_blank" className="font-bold text-primary">aviso de privacidad</a> de AIESEC&nbsp;México,&nbsp;A.C.
+          </Typography>
+        </div>
+        {errors.consent && (
+          <Typography variant="caption" color="error">{errors.consent}</Typography>
+        )}
       </div>
 
       <section>
@@ -68,6 +77,9 @@ export default function PersonalDataStep() {
           label="Nombre(s)"
           value={firstName}
           onChange={(e) => setFirstName((e.target as HTMLInputElement).value)}
+          onBlur={() => handleBlur(0)}
+          error={!!errors.firstName}
+          helperText={errors.firstName}
         />
         <TextField
           required
@@ -76,13 +88,17 @@ export default function PersonalDataStep() {
           label="Apellidos"
           value={lastName}
           onChange={(e) => setLastName((e.target as HTMLInputElement).value)}
+          onBlur={() => handleBlur(0)}
+          error={!!errors.lastName}
+          helperText={errors.lastName}
         />
-        <FormControl variant="standard" fullWidth>
+        <FormControl variant="standard" fullWidth error={!!errors.age}>
           <InputLabel>Edad</InputLabel>
           <Select
             label="Edad"
             value={age}
             onChange={(e) => setAge((e.target as HTMLSelectElement).value)}
+            onBlur={() => handleBlur(0)}
           >
             <MenuItem value="18">18</MenuItem>
             <MenuItem value="19">19</MenuItem>
@@ -98,6 +114,7 @@ export default function PersonalDataStep() {
             <MenuItem value="29">29</MenuItem>
             <MenuItem value="30">30</MenuItem>
           </Select>
+          <FormHelperText>{errors.age}</FormHelperText>
         </FormControl>
 
         <TextField
@@ -109,6 +126,9 @@ export default function PersonalDataStep() {
           variant="standard"
           value={phone}
           onChange={(e) => setPhone((e.target as HTMLInputElement).value)}
+          onBlur={() => handleBlur(0)}
+          error={!!errors.phone}
+          helperText={errors.phone}
           slotProps={{
             input: {
               startAdornment: (
@@ -130,6 +150,9 @@ export default function PersonalDataStep() {
             variant="standard"
             value={email}
             onChange={(e) => setEmail((e.target as HTMLInputElement).value)}
+            onBlur={() => handleBlur(0)}
+            error={!!errors.email}
+            helperText={errors.email}
             slotProps={{
               input: {
                 startAdornment: (
@@ -151,6 +174,9 @@ export default function PersonalDataStep() {
             variant="standard"
             value={password}
             onChange={(e) => setPassword((e.target as HTMLInputElement).value)}
+            onBlur={() => handleBlur(0)}
+            error={!!errors.password}
+            helperText={errors.password}
             slotProps={{
               input: {
                 startAdornment: (
@@ -159,6 +185,7 @@ export default function PersonalDataStep() {
                   </InputAdornment>
                 ),
               },
+              formHelperText: { sx: { whiteSpace: 'pre-line' } },
             }}
           />
         </div>

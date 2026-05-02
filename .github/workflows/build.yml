@@ -1,0 +1,46 @@
+name: Build WordPress Plugin
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Assemble plugin
+        run: |
+          mkdir -p plugin-dist/aiesec-signup-form/assets
+          cp -r wordpress/aiesec-signup-form/. plugin-dist/aiesec-signup-form/
+          cp dist/assets/index-*.js  plugin-dist/aiesec-signup-form/assets/
+          cp dist/assets/index-*.css plugin-dist/aiesec-signup-form/assets/
+
+      - name: Zip plugin
+        run: |
+          cd plugin-dist
+          zip -r ../aiesec-signup-form.zip aiesec-signup-form/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aiesec-signup-form
+          path: aiesec-signup-form.zip

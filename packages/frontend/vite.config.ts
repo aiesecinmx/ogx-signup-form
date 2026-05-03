@@ -16,4 +16,8 @@ export default defineConfig({
     },
     dedupe: ['preact'],
   },
+  base: "./",
+  build: {
+    assetsInlineLimit: 0,
+  },
 });

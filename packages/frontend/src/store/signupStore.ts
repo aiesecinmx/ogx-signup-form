@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import * as z from "zod/mini";
-import { step0Schema, step1Schema } from "../validation/schemas";
+import { step0Schema, step1Schema } from "@ogx/shared";
 
 interface SignupState {
   // Step 0 fields

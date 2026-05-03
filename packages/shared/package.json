@@ -1,0 +1,20 @@
+{
+  "name": "@ogx/shared",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.4.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

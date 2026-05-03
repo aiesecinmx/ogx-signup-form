@@ -2,28 +2,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
-    "@fontsource-variable/montserrat": "^5.2.8",
-    "@fontsource/lato": "^5.2.7",
-    "@mui/icons-material": "^7.3.5",
-    "@mui/material": "^7.3.5",
-    "preact": "^10.26.9",
-    "zod": "^4.4.1",
-    "zustand": "^5.0.11"
-  },
-  "devDependencies": {
-    "@preact/preset-vite": "^2.10.2",
-    "@tailwindcss/vite": "^4.1.17",
-    "baseline-browser-mapping": "^2.9.19",
-    "tailwindcss": "^4.1.17",
-    "typescript": "^5.9.3",
-    "vite": "^7.0.4"
+    "build": "pnpm -r build",
+    "dev": "pnpm --filter @ogx/frontend dev"
   },
   "packageManager": "pnpm@10.23.0+sha512.21c4e5698002ade97e4efe8b8b4a89a8de3c85a37919f957e7a0f30f38fbc5bbdd05980ffe29179b2fb6e6e691242e098d945d1601772cad0fef5fb6411e2a4b"
 }

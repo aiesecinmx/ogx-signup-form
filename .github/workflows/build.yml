@@ -11,11 +11,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: pnpm
@@ -23,15 +23,21 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build
-        run: pnpm build
+      - name: Typecheck shared
+        run: pnpm --filter @ogx/shared typecheck
+
+      - name: Typecheck worker
+        run: pnpm --filter @ogx/worker typecheck
+
+      - name: Build frontend
+        run: pnpm --filter @ogx/frontend build
 
       - name: Assemble plugin
         run: |
           mkdir -p plugin-dist/aiesec-signup-form/assets
           cp -r wordpress/aiesec-signup-form/. plugin-dist/aiesec-signup-form/
-          cp dist/assets/index-*.js  plugin-dist/aiesec-signup-form/assets/
-          cp dist/assets/index-*.css plugin-dist/aiesec-signup-form/assets/
+          cp packages/frontend/dist/assets/index-*.js  plugin-dist/aiesec-signup-form/assets/
+          cp packages/frontend/dist/assets/index-*.css plugin-dist/aiesec-signup-form/assets/
 
       - name: Zip plugin
         run: |
@@ -42,3 +48,4 @@ jobs:
         with:
           name: aiesec-signup-form
           path: aiesec-signup-form.zip
+          retention-days: 30

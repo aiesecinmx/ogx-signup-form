@@ -66,7 +66,7 @@ interface SignupState {
   handleBlur: (step: 0 | 1) => void;
 }
 
-function buildErrors(error: z.ZodError): Record<string, string> {
+function buildErrors(error: Parameters<typeof z.flattenError>[0]): Record<string, string> {
   const flat = z.flattenError(error);
   return Object.fromEntries(
     Object.entries(flat.fieldErrors).map(([k, v]) => [k, (v as string[])?.[0] ?? ''])

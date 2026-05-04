@@ -37,5 +37,5 @@ render(
       <App />
     </ThemeProvider>
   </StyledEngineProvider>,
-  document.getElementById('aiesec-signup-form')
+  document.getElementById('aiesec-signup-form')!
 );

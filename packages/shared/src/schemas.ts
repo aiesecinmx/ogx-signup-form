@@ -27,7 +27,9 @@ export const step0Schema = z.object({
 });
 
 export const step1Schema = z.object({
-  university: z.string().check(z.minLength(1, 'Selecciona tu universidad')),
+  university: z.nullable(z.object({ id: z.number(), value: z.string(), alignment_id: z.number() })).check(
+    z.refine((v) => v !== null, 'Selecciona tu universidad')
+  ),
   career: z.string().check(z.minLength(1, 'Selecciona tu carrera')),
   studyLevel: z.string().check(z.minLength(1, 'Selecciona tu nivel de estudios')),
   englishLevel: z.string().check(z.minLength(1, 'Selecciona tu nivel de inglés')),

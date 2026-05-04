@@ -7,11 +7,12 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CheckIcon from "@mui/icons-material/Check";
-import { universities } from "../../constants/universities";
 import { backgrounds } from "../../constants/backgrounds";
-import { useSignupStore } from "../../store/signupStore";
+import { useSignupStore, type Alignment } from "../../store/signupStore";
+import { options } from "preact";
 
 export default function ProfileStep() {
+  const universitiesList = useSignupStore((s) => s.mcInfo?.alignments ?? [])
   const university = useSignupStore((s) => s.university);
   const career = useSignupStore((s) => s.career);
   const studyLevel = useSignupStore((s) => s.studyLevel);
@@ -37,9 +38,11 @@ export default function ProfileStep() {
     <form className="flex flex-col gap-6">
       <Autocomplete
         disablePortal
-        options={universities}
+        options={universitiesList}
         value={university}
-        onChange={(_event, value: string | null) => setUniversity(value)}
+        groupBy={(option) => option.value.split(' - ')[0]}
+        getOptionLabel={(option) => option.value.split(' - ')[1] ?? option.value}
+        onChange={(_event, value: Alignment | null) => setUniversity(value)}
         onBlur={() => handleBlur(1)}
         // @ts-ignore
         renderInput={(params) => <TextField {...params} label="Universidad" variant="standard" placeholder="Selecciona una opción" error={!!errors.university} helperText={errors.university} />}
@@ -56,7 +59,7 @@ export default function ProfileStep() {
       />
 
       <FormControl fullWidth variant="standard" error={!!errors.studyLevel}>
-        <InputLabel id="study-level-label">Máximo Nivel de Estudios</InputLabel>
+        <InputLabel id="study-level-label">Máximo Nivel de Estudios Cursado</InputLabel>
         <Select
           labelId="study-level-label"
           id="study-level"

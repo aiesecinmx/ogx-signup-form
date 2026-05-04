@@ -2,7 +2,25 @@ import { create } from "zustand";
 import * as z from "zod/mini";
 import { step0Schema, step1Schema } from "@ogx/shared";
 
+const MC_ALIGNMENTS_URL = 'https://api.aiesec.org/v2/lists/mcs_alignments?mc_name=Mexico';
+
+export interface Alignment {
+  id: number; // Id of the LC (EY) responsible for this alignment
+  value: string; // Readable version of the alignment. Important: It expects the following format: State - Alignment Name
+  alignment_id: number;
+}
+
+export interface McWithAlignments {
+  id: number; // Country id
+  name: string;
+  alignments: Alignment[];
+}
+
 interface SignupState {
+  mcInfo: McWithAlignments | null;
+  loadingAlignments: boolean;
+  fetchMcAlignments: () => Promise<void>;
+
   // Step 0 fields
   consent: boolean;
   firstName: string;
@@ -13,7 +31,7 @@ interface SignupState {
 
   // Step 1 fields
   phone: string;
-  university: string | null;
+  university: Alignment | null;
   career: string | null;
   studyLevel: string;
   englishLevel: string;
@@ -34,7 +52,7 @@ interface SignupState {
   setEmail: (value: string) => void;
   setPassword: (value: string) => void;
   setPhone: (value: string) => void;
-  setUniversity: (value: string | null) => void;
+  setUniversity: (value: Alignment | null) => void;
   setCareer: (value: string | null) => void;
   setStudyLevel: (value: string) => void;
   setEnglishLevel: (value: string) => void;
@@ -69,7 +87,7 @@ function getStep0Payload(state: SignupState) {
 
 function getStep1Payload(state: SignupState) {
   return {
-    university: state.university ?? '',
+    university: state.university,
     career: state.career ?? '',
     studyLevel: state.studyLevel,
     englishLevel: state.englishLevel,
@@ -78,6 +96,39 @@ function getStep1Payload(state: SignupState) {
 }
 
 export const useSignupStore = create<SignupState>((set, get) => ({
+  mcInfo: null,
+  loadingAlignments: false,
+  fetchMcAlignments: async () => {
+    const prepareAlignments = (mc: McWithAlignments) => {
+      mc.alignments.sort((a, b) => a.value.localeCompare(b.value, "es-MX"))
+      mc.alignments = mc.alignments.filter((a, i, alignments) => {
+        return a.value !== alignments[i + 1]?.value
+      })
+      mc.alignments.sort((a, b) => a.value.split(' - ')[0].localeCompare(b.value.split(' - ')[0], "es-MX"))
+    }
+
+    const injected = (window as any).AIESEC_MC_ALIGNMENTS as McWithAlignments | null;
+    if (injected) {
+      prepareAlignments(injected)
+      set({ mcInfo: injected });
+      return;
+    }
+    try {
+      console.log('Fetching MC Alignments...')
+      set({ loadingAlignments: true })
+      const res = await fetch(MC_ALIGNMENTS_URL);
+      const [data]: McWithAlignments[] = await res.json();
+      prepareAlignments(data)
+
+      console.log('AIESEC MC Alignments (Mexico):', data);
+      // TODO: Add Zod validation for retrieved payload and error management instead of blindly trusting structure
+      set({ mcInfo: data, loadingAlignments: false });
+    } catch (e) {
+      console.error('Failed to fetch MC alignments:', e);
+      set({ mcInfo: null, loadingAlignments: false });
+    }
+  },
+
   // Step 0 fields
   consent: false,
   firstName: "",

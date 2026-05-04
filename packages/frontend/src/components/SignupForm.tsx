@@ -1,3 +1,4 @@
+import { useEffect } from "preact/hooks";
 import Step from "@mui/material/Step";
 import StepLabel, { type StepLabelProps } from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
@@ -19,6 +20,11 @@ const stepLabelSlotProps: StepLabelProps["slotProps"] = {
 export default function SignupForm() {
   const activeStep = useSignupStore((s) => s.activeStep);
   const goBack = useSignupStore((s) => s.goBack);
+  const fetchMcAlignments = useSignupStore((s) => s.fetchMcAlignments);
+
+  useEffect(() => {
+    fetchMcAlignments();
+  }, []);
 
   return (
     <div className="flex flex-col items-center w-full max-w-lg">

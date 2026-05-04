@@ -5,6 +5,11 @@
  * Version: 1.0.0
  */
 
+// Configurable cache TTL (seconds). Override in wp-config.php if needed.
+if (!defined('AIESEC_ALIGNMENTS_CACHE_TTL')) {
+    define('AIESEC_ALIGNMENTS_CACHE_TTL', HOUR_IN_SECONDS);
+}
+
 function aiesec_signup_form_enqueue() {
     $plugin_url = plugin_dir_url(__FILE__);
     $assets_dir = plugin_dir_path(__FILE__) . 'assets/';
@@ -17,6 +22,29 @@ function aiesec_signup_form_enqueue() {
     }
     if (!empty($js_files)) {
         wp_enqueue_script('aiesec-signup-form', $plugin_url . 'assets/' . basename($js_files[0]), [], null, true);
+    }
+
+    // Fetch (and cache) MC Alignments for Mexico
+    $transient_key   = 'aiesec_mc_alignments_mexico';
+    $alignments_data = get_transient($transient_key);
+
+    if ($alignments_data === false) {
+        $response = wp_remote_get('https://api.aiesec.org/v2/lists/mcs_alignments?mc_name=Mexico');
+        if (!is_wp_error($response)) {
+            $body = wp_remote_retrieve_body($response);
+            if (json_validate($body)) {
+                $alignments_data = $body;
+                set_transient($transient_key, $alignments_data, AIESEC_ALIGNMENTS_CACHE_TTL);
+            }
+        }
+    }
+
+    if ($alignments_data !== false) {
+      wp_add_inline_script(
+          'aiesec-signup-form',
+          'window.AIESEC_MC_ALIGNMENTS = ' . $alignments_data . ';',
+          'before'
+      );
     }
 }
 

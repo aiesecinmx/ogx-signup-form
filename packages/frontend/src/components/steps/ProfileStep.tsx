@@ -14,16 +14,16 @@ import { options } from "preact";
 export default function ProfileStep() {
   const universitiesList = useSignupStore((s) => s.mcInfo?.alignments ?? [])
   const university = useSignupStore((s) => s.university);
-  const career = useSignupStore((s) => s.career);
-  const studyLevel = useSignupStore((s) => s.studyLevel);
-  const englishLevel = useSignupStore((s) => s.englishLevel);
+  const major = useSignupStore((s) => s.major);
+  const schoolingLevel = useSignupStore((s) => s.schoolingLevel);
+  const englishProficiency = useSignupStore((s) => s.englishProficiency);
   const referralSource = useSignupStore((s) => s.referralSource);
   const errors = useSignupStore((s) => s.errors);
   const loading = useSignupStore((s) => s.loading);
   const setUniversity = useSignupStore((s) => s.setUniversity);
-  const setCareer = useSignupStore((s) => s.setCareer);
-  const setStudyLevel = useSignupStore((s) => s.setStudyLevel);
-  const setEnglishLevel = useSignupStore((s) => s.setEnglishLevel);
+  const setMajor = useSignupStore((s) => s.setMajor);
+  const setSchoolingLevel = useSignupStore((s) => s.setSchoolingLevel);
+  const setEnglishProficiency = useSignupStore((s) => s.setEnglishProficiency);
   const setReferralSource = useSignupStore((s) => s.setReferralSource);
   const setLoading = useSignupStore((s) => s.setLoading);
   const submitForm = useSignupStore((s) => s.submitForm);
@@ -51,11 +51,11 @@ export default function ProfileStep() {
       <Autocomplete
         disablePortal
         options={backgrounds}
-        value={career}
-        onChange={(_event, value: string | null) => setCareer(value)}
+        value={major}
+        onChange={(_event, value: string | null) => setMajor(value)}
         onBlur={() => handleBlur(1)}
         // @ts-ignore
-        renderInput={(params) => <TextField {...params} label="Carrera o Background Profesional" variant="standard" placeholder="Selecciona una opción" error={!!errors.career} helperText={errors.career} />}
+        renderInput={(params) => <TextField {...params} label="Carrera o Background Profesional" variant="standard" placeholder="Selecciona una opción" error={!!errors.major} helperText={errors.major} />}
       />
 
       <FormControl fullWidth variant="standard" error={!!errors.studyLevel}>
@@ -64,8 +64,8 @@ export default function ProfileStep() {
           labelId="study-level-label"
           id="study-level"
           label="Máximo Nivel de Estudios"
-          value={studyLevel}
-          onChange={(e) => setStudyLevel((e.target as HTMLSelectElement).value)}
+          value={schoolingLevel}
+          onChange={(e) => setSchoolingLevel((e.target as HTMLSelectElement).value)}
           onBlur={() => handleBlur(1)}
         >
           <MenuItem value="Preparatoria">Preparatoria</MenuItem>
@@ -74,7 +74,7 @@ export default function ProfileStep() {
           <MenuItem value="Maestría">Maestría</MenuItem>
           <MenuItem value="Doctorado">Doctorado</MenuItem>
         </Select>
-        <FormHelperText>{errors.studyLevel}</FormHelperText>
+        <FormHelperText>{errors.schoolingLevel}</FormHelperText>
       </FormControl>
 
       <FormControl fullWidth variant="standard" error={!!errors.englishLevel}>
@@ -83,15 +83,15 @@ export default function ProfileStep() {
           labelId="english-level-label"
           id="english-level"
           label="Nivel de Inglés"
-          value={englishLevel}
-          onChange={(e) => setEnglishLevel((e.target as HTMLSelectElement).value)}
+          value={englishProficiency}
+          onChange={(e) => setEnglishProficiency((e.target as HTMLSelectElement).value)}
           onBlur={() => handleBlur(1)}
         >
           <MenuItem value="A">A1 - A2 (Básico)</MenuItem>
           <MenuItem value="B">B1 - B2 (Intermedio)</MenuItem>
           <MenuItem value="C">C1 - C2 (Avanzado)</MenuItem>
         </Select>
-        <FormHelperText>{errors.englishLevel}</FormHelperText>
+        <FormHelperText>{errors.englishProficiency}</FormHelperText>
       </FormControl>
 
       <FormControl fullWidth variant="standard" error={!!errors.referralSource}>

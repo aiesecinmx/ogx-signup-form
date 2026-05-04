@@ -32,9 +32,9 @@ interface SignupState {
   // Step 1 fields
   phone: string;
   university: Alignment | null;
-  career: string | null;
-  studyLevel: string;
-  englishLevel: string;
+  major: string | null;
+  schoolingLevel: string;
+  englishProficiency: string;
   referralSource: string;
 
   // Navigation
@@ -53,9 +53,9 @@ interface SignupState {
   setPassword: (value: string) => void;
   setPhone: (value: string) => void;
   setUniversity: (value: Alignment | null) => void;
-  setCareer: (value: string | null) => void;
-  setStudyLevel: (value: string) => void;
-  setEnglishLevel: (value: string) => void;
+  setMajor: (value: string | null) => void;
+  setSchoolingLevel: (value: string) => void;
+  setEnglishProficiency: (value: string) => void;
   setReferralSource: (value: string) => void;
   setErrors: (errors: Record<string, string>) => void;
   clearErrors: () => void;
@@ -88,9 +88,9 @@ function getStep0Payload(state: SignupState) {
 function getStep1Payload(state: SignupState) {
   return {
     university: state.university,
-    career: state.career ?? '',
-    studyLevel: state.studyLevel,
-    englishLevel: state.englishLevel,
+    major: state.major ?? '',
+    schoolingLevel: state.schoolingLevel,
+    englishProficiency: state.englishProficiency,
     referralSource: state.referralSource,
   };
 }
@@ -140,9 +140,9 @@ export const useSignupStore = create<SignupState>((set, get) => ({
   // Step 1 fields
   phone: "",
   university: null,
-  career: null,
-  studyLevel: "",
-  englishLevel: "",
+  major: null,
+  schoolingLevel: "",
+  englishProficiency: "",
   referralSource: "",
 
   // Navigation
@@ -161,9 +161,9 @@ export const useSignupStore = create<SignupState>((set, get) => ({
   setPassword: (value) => set({ password: value }),
   setPhone: (value) => set({ phone: value }),
   setUniversity: (value) => set({ university: value }),
-  setCareer: (value) => set({ career: value }),
-  setStudyLevel: (value) => set({ studyLevel: value }),
-  setEnglishLevel: (value) => set({ englishLevel: value }),
+  setMajor: (value) => set({ major: value }),
+  setSchoolingLevel: (value) => set({ schoolingLevel: value }),
+  setEnglishProficiency: (value) => set({ englishProficiency: value }),
   setReferralSource: (value) => set({ referralSource: value }),
   setErrors: (errors) => set({ errors }),
   clearErrors: () => set({ errors: {} }),

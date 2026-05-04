@@ -22,3 +22,6 @@ dist*
 *.sln
 *.sw?
 .vercel
+
+# Wrangler local dev state
+.wrangler/

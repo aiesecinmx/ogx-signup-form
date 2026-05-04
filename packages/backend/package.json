@@ -1,0 +1,21 @@
+{
+  "name": "@ogx/backend",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ogx/shared": "workspace:*",
+    "hono": "^4.12.16",
+    "zod": "^4.4.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241230.0",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.87.0"
+  }
+}

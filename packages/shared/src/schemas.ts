@@ -36,5 +36,10 @@ export const step1Schema = z.object({
   referralSource: z.string().check(z.minLength(1, 'Selecciona cómo te enteraste')),
 });
 
+export const signupSchema = z.object({
+  ...step0Schema.shape,
+  ...step1Schema.shape,
+});
+
 export type Step0Errors = Partial<Record<keyof z.infer<typeof step0Schema>, string>>;
 export type Step1Errors = Partial<Record<keyof z.infer<typeof step1Schema>, string>>;

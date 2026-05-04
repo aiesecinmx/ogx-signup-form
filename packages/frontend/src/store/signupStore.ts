@@ -107,10 +107,10 @@ export const useSignupStore = create<SignupState>((set, get) => ({
       mc.alignments.sort((a, b) => a.value.split(' - ')[0].localeCompare(b.value.split(' - ')[0], "es-MX"))
     }
 
-    const injected = (window as any).AIESEC_MC_ALIGNMENTS as McWithAlignments | null;
-    if (injected) {
-      prepareAlignments(injected)
-      set({ mcInfo: injected });
+    const injected: McWithAlignments[] | undefined = (window as any).AIESEC_MC_ALIGNMENTS;
+    if (Array.isArray(injected) && injected.length) {
+      prepareAlignments(injected[0]);
+      set({ mcInfo: injected[0] });
       return;
     }
     try {

@@ -30,7 +30,7 @@ app.post("/", async (c) => {
   const validation = await parseAndValidate(c.req.raw);
   if (!validation.ok) return c.json({ error: "Bad Request", errors: validation.errors }, 400);
 
-  const payload = buildExpaPayload(validation.data, Number(c.env.AIESEC_COUNTRY_ID));
+  const payload = buildExpaPayload(validation.data);
   const result = await postToExpa(c.env.EXPA_SIGNUP_URL, payload);
 
   if (result.status === 201) return new Response(null, { status: 201 });

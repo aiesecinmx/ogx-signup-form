@@ -25,3 +25,5 @@ dist*
 
 # Wrangler local dev state
 .wrangler/
+*.vars
+.env*

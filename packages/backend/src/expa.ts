@@ -1,5 +1,6 @@
 import * as z from "zod/mini";
 import { signupSchema } from "@ogx/shared";
+import { env } from "cloudflare:workers";
 
 type SignupData = z.infer<typeof signupSchema>;
 
@@ -8,10 +9,12 @@ type ExpaResult = { status: 201 } | { status: 422 } | { status: 503 };
 function parsePhone(raw: string): { country_code: string; phone: string } {
   if (/^\d{10}$/.test(raw)) return { country_code: "+52", phone: raw };
   if (raw.startsWith("+52")) return { country_code: "+52", phone: raw.slice(3) };
+  // TODO: Improve logic to parse country code
   return { country_code: "", phone: raw };
 }
 
-export function buildExpaPayload(data: SignupData, countryId: number) {
+const mcId = Number.parseInt(env.AIESEC_COUNTRY_ID, 10);
+export function buildExpaPayload(data: SignupData) {
   const { country_code, phone } = parsePhone(data.phone);
   return {
     user: {
@@ -21,7 +24,7 @@ export function buildExpaPayload(data: SignupData, countryId: number) {
       country_code,
       phone,
       password: data.password,
-      country: countryId,
+      country: mcId,
       lc: data.university!.id,
       lc_input: data.university!.id,
       referral_type: data.referralSource,

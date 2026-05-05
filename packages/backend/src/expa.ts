@@ -4,6 +4,8 @@ import { env } from "cloudflare:workers";
 
 type SignupData = z.infer<typeof signupSchema>;
 
+const PROGRAM_TO_EXPA: Record<string, number> = { GV: 7, GTa: 8, GTe: 9 };
+
 type ExpaResult = { status: 201 } | { status: 422 } | { status: 503 };
 
 function parsePhone(raw: string): { country_code: string; phone: string } {
@@ -32,7 +34,7 @@ export function buildExpaPayload(data: SignupData) {
       allow_phone_communication: 1,
       allow_email_communication: 1,
       allow_term_and_conditions: 1,
-      selected_programmes: [7],
+      selected_programmes: [PROGRAM_TO_EXPA[data.program]],
       created_via: "https://aiesec.org.mx",
     },
   };

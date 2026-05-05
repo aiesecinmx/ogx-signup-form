@@ -2,6 +2,8 @@ import { create } from "zustand";
 import * as z from "zod/mini";
 import { step0Schema, step1Schema } from "@ogx/shared";
 
+const API_URL = import.meta.env.VITE_MX_SIGNUP_URL as string;
+
 const MC_ALIGNMENTS_URL = 'https://api.aiesec.org/v2/lists/mcs_alignments?mc_name=Mexico';
 
 export const PROGRAM_TO_EXPA: Record<string, number> = { GV: 7, GTa: 8, GTe: 9 };
@@ -44,6 +46,7 @@ interface SignupState {
   activeStep: number;
   loading: boolean;
   registrationComplete: boolean;
+  registrationError: string | null;
 
   // Validation
   errors: Record<string, string>;
@@ -63,11 +66,12 @@ interface SignupState {
   setReferralSource: (value: string) => void;
   setErrors: (errors: Record<string, string>) => void;
   clearErrors: () => void;
+  clearRegistrationError: () => void;
   goNext: () => void;
   goBack: () => void;
   setLoading: (value: boolean) => void;
   resetForm: () => void;
-  submitForm: () => void;
+  submitForm: () => Promise<void>;
   handleBlur: (step: 0 | 1) => void;
 }
 
@@ -155,6 +159,7 @@ export const useSignupStore = create<SignupState>((set, get) => ({
   activeStep: 0,
   loading: false,
   registrationComplete: false,
+  registrationError: null,
 
   // Validation
   errors: {},
@@ -174,6 +179,7 @@ export const useSignupStore = create<SignupState>((set, get) => ({
   setReferralSource: (value) => set({ referralSource: value }),
   setErrors: (errors) => set({ errors }),
   clearErrors: () => set({ errors: {} }),
+  clearRegistrationError: () => set({ registrationError: null }),
   goNext: () => {
     const state = get();
     const result = step0Schema.safeParse(getStep0Payload(state));
@@ -202,20 +208,47 @@ export const useSignupStore = create<SignupState>((set, get) => ({
     errors: {},
     loading: false,
     registrationComplete: false,
+    registrationError: null,
   }),
-  submitForm: () => {
+  submitForm: async () => {
     const state = get();
     const result = step1Schema.safeParse(getStep1Payload(state));
     if (!result.success) {
       set({ loading: false, errors: buildErrors(result.error) });
       return;
     }
-    set({ errors: {}, loading: false, registrationComplete: true });
-    console.log("Form submitted:", {
+
+    set({ loading: true, errors: {} });
+    const payload = {
       ...getStep0Payload(state),
       ...getStep1Payload(state),
       program: state.program,
-    });
+    };
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.status === 201) {
+        set({ loading: false, registrationComplete: true });
+        return;
+      }
+
+      if (res.status === 422) {
+        const data = await res.json().catch(() => ({}));
+        const emailError = (data as any)?.errors?.email?.[0];
+        set({ loading: false, errors: { email: emailError ?? 'Este correo ya está registrado' } });
+        return;
+      }
+
+      const data = await res.json().catch(() => ({}));
+      set({ loading: false, registrationError: (data as any)?.error ?? `Error ${res.status}` });
+    } catch (err) {
+      set({ loading: false, registrationError: err instanceof Error ? err.message : 'Error de red' });
+    }
   },
   handleBlur: (step) => {
     const state = get();

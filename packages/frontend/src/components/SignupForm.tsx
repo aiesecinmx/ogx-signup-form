@@ -8,6 +8,7 @@ import { useSignupStore } from "../store/signupStore";
 import PersonalDataStep from "./steps/PersonalDataStep";
 import ProfileStep from "./steps/ProfileStep";
 import SuccessModal from "./SuccessModal";
+import ErrorModal from "./ErrorModal";
 
 const sectionOneName = "Datos personales";
 const sectionTwoName = "Acerca de ti";
@@ -59,6 +60,7 @@ export default function SignupForm() {
       </div>
 
       <SuccessModal />
+      <ErrorModal />
     </div>
   );
 }

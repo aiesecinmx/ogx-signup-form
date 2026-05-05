@@ -1,4 +1,5 @@
 import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
@@ -16,10 +17,11 @@ export default function SuccessModal() {
 
   return (
     <Dialog open={registrationComplete} disableEscapeKeyDown>
+      <DialogTitle className="text-xl">¡Tu registro está completo!</DialogTitle>
       <DialogContent>
         <Typography>
-          ¡Tu registro está completo! Te contactaremos en las próximas 48 horas,
-          pero ya puedes iniciar sesión y buscar oportunidades en nuestro portal.
+          Te contactaremos en las próximas 48 horas,
+          pero ya puedes iniciar sesión y buscar oportunidades en nuestro portal global.
         </Typography>
       </DialogContent>
       <DialogActions className="px-6 pb-6">

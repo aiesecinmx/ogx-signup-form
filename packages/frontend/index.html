@@ -9,6 +9,15 @@
 
 <body>
   <div id="aiesec-signup-form"></div>
+  <script>
+    const validPrograms = ['GV', 'GTa', 'GTe'];
+    const param = new URLSearchParams(location.search).get('program');
+    const validProgram = validPrograms.includes(param);
+    if (!validProgram) {
+      console.warn("Invalid program. Defaulting to GV")
+    }
+    window.AIESEC_PROGRAM = validProgram ? param : 'GV';
+  </script>
   <script type="module" src="/src/index.tsx"></script>
 </body>
 

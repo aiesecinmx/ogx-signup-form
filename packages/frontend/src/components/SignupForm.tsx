@@ -7,6 +7,7 @@ import { IconButton } from "@mui/material";
 import { useSignupStore } from "../store/signupStore";
 import PersonalDataStep from "./steps/PersonalDataStep";
 import ProfileStep from "./steps/ProfileStep";
+import SuccessModal from "./SuccessModal";
 
 const sectionOneName = "Datos personales";
 const sectionTwoName = "Acerca de ti";
@@ -56,6 +57,8 @@ export default function SignupForm() {
         {activeStep === 0 && <PersonalDataStep />}
         {activeStep === 1 && <ProfileStep />}
       </div>
+
+      <SuccessModal />
     </div>
   );
 }

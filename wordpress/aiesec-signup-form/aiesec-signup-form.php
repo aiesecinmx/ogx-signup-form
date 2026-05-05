@@ -10,7 +10,7 @@ if (!defined('AIESEC_ALIGNMENTS_CACHE_TTL')) {
     define('AIESEC_ALIGNMENTS_CACHE_TTL', HOUR_IN_SECONDS);
 }
 
-function aiesec_signup_form_enqueue() {
+function aiesec_signup_form_enqueue($program) {
     $plugin_url = plugin_dir_url(__FILE__);
     $assets_dir = plugin_dir_path(__FILE__) . 'assets/';
 
@@ -39,17 +39,20 @@ function aiesec_signup_form_enqueue() {
         }
     }
 
+    $inline = 'window.AIESEC_PROGRAM = ' . json_encode($program) . ';';
     if ($alignments_data !== false) {
-      wp_add_inline_script(
-          'aiesec-signup-form',
-          'window.AIESEC_MC_ALIGNMENTS = ' . $alignments_data . ';',
-          'before'
-      );
+        $inline .= "\nwindow.AIESEC_MC_ALIGNMENTS = " . $alignments_data . ';';
     }
+    wp_add_inline_script('aiesec-signup-form', $inline, 'before');
 }
 
-function aiesec_signup_form_shortcode() {
-    aiesec_signup_form_enqueue();
+function aiesec_signup_form_shortcode($atts) {
+    $atts = shortcode_atts(['program' => ''], $atts, 'aiesec_signup_form');
+    $valid_programs = ['GV', 'GTa', 'GTe'];
+    if (!in_array($atts['program'], $valid_programs, true)) {
+        return '<!-- [aiesec_signup_form] error: invalid or missing "program" attribute (expected: GV, GTa, or GTe) -->';
+    }
+    aiesec_signup_form_enqueue($atts['program']);
     return '<div id="aiesec-signup-form"></div>';
 }
 add_shortcode('aiesec_signup_form', 'aiesec_signup_form_shortcode');

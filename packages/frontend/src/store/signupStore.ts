@@ -4,6 +4,8 @@ import { step0Schema, step1Schema } from "@ogx/shared";
 
 const MC_ALIGNMENTS_URL = 'https://api.aiesec.org/v2/lists/mcs_alignments?mc_name=Mexico';
 
+export const PROGRAM_TO_EXPA: Record<string, number> = { GV: 7, GTa: 8, GTe: 9 };
+
 export interface Alignment {
   id: number; // Id of the LC (EY) responsible for this alignment
   value: string; // Readable version of the alignment. Important: It expects the following format: State - Alignment Name
@@ -36,10 +38,12 @@ interface SignupState {
   schoolingLevel: string;
   englishProficiency: string;
   referralSource: string;
+  program: 'GV' | 'GTa' | 'GTe' | '';
 
   // Navigation
   activeStep: number;
   loading: boolean;
+  registrationComplete: boolean;
 
   // Validation
   errors: Record<string, string>;
@@ -62,6 +66,7 @@ interface SignupState {
   goNext: () => void;
   goBack: () => void;
   setLoading: (value: boolean) => void;
+  resetForm: () => void;
   submitForm: () => void;
   handleBlur: (step: 0 | 1) => void;
 }
@@ -144,10 +149,12 @@ export const useSignupStore = create<SignupState>((set, get) => ({
   schoolingLevel: "",
   englishProficiency: "",
   referralSource: "",
+  program: ((window as any).AIESEC_PROGRAM ?? '') as 'GV' | 'GTa' | 'GTe' | '',
 
   // Navigation
   activeStep: 0,
   loading: false,
+  registrationComplete: false,
 
   // Validation
   errors: {},
@@ -178,6 +185,24 @@ export const useSignupStore = create<SignupState>((set, get) => ({
   },
   goBack: () => set((state) => ({ activeStep: state.activeStep - 1, errors: {} })),
   setLoading: (value) => set({ loading: value }),
+  resetForm: () => set({
+    consent: false,
+    firstName: "",
+    lastName: "",
+    age: "",
+    email: "",
+    password: "",
+    phone: "",
+    university: null,
+    major: null,
+    schoolingLevel: "",
+    englishProficiency: "",
+    referralSource: "",
+    activeStep: 0,
+    errors: {},
+    loading: false,
+    registrationComplete: false,
+  }),
   submitForm: () => {
     const state = get();
     const result = step1Schema.safeParse(getStep1Payload(state));
@@ -185,10 +210,11 @@ export const useSignupStore = create<SignupState>((set, get) => ({
       set({ loading: false, errors: buildErrors(result.error) });
       return;
     }
-    set({ errors: {}, loading: false });
+    set({ errors: {}, loading: false, registrationComplete: true });
     console.log("Form submitted:", {
       ...getStep0Payload(state),
       ...getStep1Payload(state),
+      program: state.program,
     });
   },
   handleBlur: (step) => {

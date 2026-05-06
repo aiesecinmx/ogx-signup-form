@@ -29,7 +29,11 @@ function aiesec_signup_form_enqueue($program) {
     $alignments_data = get_transient($transient_key);
 
     if ($alignments_data === false) {
-        $response = wp_remote_get('https://api.aiesec.org/v2/lists/mcs_alignments?mc_name=Mexico');
+        $alignments_url = getenv('AIESEC_ALIGNMENTS_URL');
+        if ($alignments_url === false) {
+            wp_die('AIESEC_ALIGNMENTS_URL environment variable is not defined.');
+        }
+        $response = wp_remote_get($alignments_url);
         if (!is_wp_error($response)) {
             $body = wp_remote_retrieve_body($response);
             if (json_validate($body)) {

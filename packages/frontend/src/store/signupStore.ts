@@ -3,8 +3,7 @@ import * as z from "zod/mini";
 import { step0Schema, step1Schema } from "@ogx/shared";
 
 const API_URL = import.meta.env.VITE_MX_SIGNUP_URL as string;
-
-const MC_ALIGNMENTS_URL = 'https://api.aiesec.org/v2/lists/mcs_alignments?mc_name=Mexico';
+const MC_ALIGNMENTS_URL = import.meta.env.VITE_MX_ALIGNMENTS_URL as string;
 
 export const PROGRAM_TO_EXPA: Record<string, number> = { GV: 7, GTa: 8, GTe: 9 };
 

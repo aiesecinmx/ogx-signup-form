@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - uses: actions/checkout@v6
 
@@ -23,6 +24,9 @@ jobs:
 
       - name: Build frontend
         run: pnpm --filter @ogx/frontend build
+        env:
+          VITE_MX_SIGNUP_URL: ${{ vars.VITE_MX_SIGNUP_URL }}
+          VITE_MX_ALIGNMENTS_URL: ${{ vars.VITE_MX_ALIGNMENTS_URL }}
 
       - name: Assemble plugin
         run: |

@@ -1,9 +1,11 @@
 packages:
-  - "packages/*"
+  - packages/*
 
 onlyBuiltDependencies:
   - esbuild
+  - sharp
+  - workerd
 
 overrides:
-  "react": "npm:@preact/compat"
-  "react-dom": "npm:@preact/compat"
+  react: npm:@preact/compat
+  react-dom: npm:@preact/compat

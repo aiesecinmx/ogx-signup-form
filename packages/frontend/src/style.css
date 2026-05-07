@@ -18,3 +18,9 @@
   --color-text-disabled: var(--mui-palette-text-disabled);
 }
 
+/* Undo WordPress unlayered font-size overrides so MUI layer styles win */
+#aiesec-signup-form * {
+  font-size: revert-layer;
+  line-height: revert-layer;
+}
+

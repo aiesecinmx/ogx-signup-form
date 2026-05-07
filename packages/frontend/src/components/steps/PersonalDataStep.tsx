@@ -36,7 +36,7 @@ export default function PersonalDataStep() {
   return (
     <>
       <section className="flex flex-col gap-4">
-        <Typography variant="subtitle1" component="h2" className="text-2xl font-bold">
+        <Typography variant="subtitle1" component="div" className="text-2xl font-bold">
           ¡Deja tus datos e inicia la mejor experiencia de tu vida!
         </Typography>
         <Typography color="textSecondary" className="font-[Montserrat_Variable] font-light text-base">

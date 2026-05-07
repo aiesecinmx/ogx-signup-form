@@ -1,4 +1,7 @@
-name = "ogx-signup-backend"
+name = "ogx-signup-form"
 main = "src/index.ts"
 compatibility_date = "2024-12-01"
 
+[observability.logs]
+enabled = true
+invocation_logs = true

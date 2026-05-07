@@ -46,6 +46,7 @@ interface SignupState {
   loading: boolean;
   registrationComplete: boolean;
   registrationError: string | null;
+  duplicateEmail: boolean;
 
   // Validation
   errors: Record<string, string>;
@@ -66,6 +67,7 @@ interface SignupState {
   setErrors: (errors: Record<string, string>) => void;
   clearErrors: () => void;
   clearRegistrationError: () => void;
+  clearDuplicateEmail: () => void;
   goNext: () => void;
   goBack: () => void;
   setLoading: (value: boolean) => void;
@@ -159,6 +161,7 @@ export const useSignupStore = create<SignupState>((set, get) => ({
   loading: false,
   registrationComplete: false,
   registrationError: null,
+  duplicateEmail: false,
 
   // Validation
   errors: {},
@@ -179,6 +182,7 @@ export const useSignupStore = create<SignupState>((set, get) => ({
   setErrors: (errors) => set({ errors }),
   clearErrors: () => set({ errors: {} }),
   clearRegistrationError: () => set({ registrationError: null }),
+  clearDuplicateEmail: () => set({ duplicateEmail: false }),
   goNext: () => {
     const state = get();
     const result = step0Schema.safeParse(getStep0Payload(state));
@@ -208,6 +212,7 @@ export const useSignupStore = create<SignupState>((set, get) => ({
     loading: false,
     registrationComplete: false,
     registrationError: null,
+    duplicateEmail: false,
   }),
   submitForm: async () => {
     const state = get();
@@ -237,9 +242,7 @@ export const useSignupStore = create<SignupState>((set, get) => ({
       }
 
       if (res.status === 422) {
-        const data = await res.json().catch(() => ({}));
-        const emailError = (data as any)?.errors?.email?.[0];
-        set({ loading: false, errors: { email: emailError ?? 'Este correo ya está registrado' } });
+        set({ loading: false, duplicateEmail: true });
         return;
       }
 

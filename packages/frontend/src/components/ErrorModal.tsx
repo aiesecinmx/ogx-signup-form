@@ -12,7 +12,7 @@ export default function ErrorModal() {
 
   return (
     <Dialog open={registrationError !== null} disableEscapeKeyDown>
-      <DialogTitle className="text-xl">Error de registro</DialogTitle>
+      <DialogTitle component="div" className="text-xl">Error de registro</DialogTitle>
       <DialogContent>
         <Typography>
           Ocurrió un error en el registro. Si el problema persiste, envíanos un correo a{" "}

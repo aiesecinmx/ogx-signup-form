@@ -23,6 +23,6 @@
 .MuiModal-root * {
   font-size: revert-layer;
   line-height: revert-layer;
-  background-color: revert-layer;
+  color: revert-layer;
 }
 

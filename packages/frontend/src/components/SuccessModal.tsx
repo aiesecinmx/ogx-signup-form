@@ -17,7 +17,7 @@ export default function SuccessModal() {
 
   return (
     <Dialog open={registrationComplete} disableEscapeKeyDown>
-      <DialogTitle className="text-xl">¡Tu registro está completo!</DialogTitle>
+      <DialogTitle component="div" className="text-xl">¡Tu registro está completo!</DialogTitle>
       <DialogContent>
         <Typography>
           Te contactaremos en las próximas 48 horas,

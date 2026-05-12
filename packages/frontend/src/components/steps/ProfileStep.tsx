@@ -7,9 +7,10 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CheckIcon from "@mui/icons-material/Check";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { backgrounds } from "../../constants/backgrounds";
 import { useSignupStore, type Alignment } from "../../store/signupStore";
-import { options } from "preact";
+import { useRef } from 'preact/hooks';
 
 export default function ProfileStep() {
   const universitiesList = useSignupStore((s) => s.mcInfo?.alignments ?? [])
@@ -20,6 +21,8 @@ export default function ProfileStep() {
   const referralSource = useSignupStore((s) => s.referralSource);
   const errors = useSignupStore((s) => s.errors);
   const loading = useSignupStore((s) => s.loading);
+  const turnstileToken = useSignupStore((s) => s.turnstileToken);
+  const setTurnstileToken = useSignupStore((s) => s.setTurnstileToken);
   const setUniversity = useSignupStore((s) => s.setUniversity);
   const setMajor = useSignupStore((s) => s.setMajor);
   const setSchoolingLevel = useSignupStore((s) => s.setSchoolingLevel);
@@ -28,10 +31,12 @@ export default function ProfileStep() {
   const setLoading = useSignupStore((s) => s.setLoading);
   const submitForm = useSignupStore((s) => s.submitForm);
   const handleBlur = useSignupStore((s) => s.handleBlur);
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
 
   const handleSubmit = () => {
     setLoading(true);
     submitForm();
+    turnstileRef.current?.reset();
   };
 
   return (
@@ -119,6 +124,17 @@ export default function ProfileStep() {
         <FormHelperText>{errors.referralSource}</FormHelperText>
       </FormControl>
 
+      <Turnstile
+        // @ts-ignore preact MutableRef vs React RefObject incompatibility
+        ref={turnstileRef}
+        siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+        onSuccess={setTurnstileToken}
+        onExpire={() => setTurnstileToken("")}
+        onError={() => setTurnstileToken("")}
+        className="self-center"
+        options={{ appearance: "interaction-only" }}
+      />
+
       <Button
         variant="contained"
         color="primary"
@@ -127,6 +143,7 @@ export default function ProfileStep() {
         loadingPosition="end"
         onClick={handleSubmit}
         loading={loading}
+        disabled={!turnstileToken || loading}
       >
         Enviar
       </Button>

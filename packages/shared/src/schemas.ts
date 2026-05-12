@@ -40,6 +40,7 @@ export const signupSchema = z.object({
   ...step0Schema.shape,
   ...step1Schema.shape,
   program: z.enum(['GV', 'GTa', 'GTe']),
+  turnstileToken: z.string().check(z.minLength(1)),
 });
 
 export type Step0Errors = Partial<Record<keyof z.infer<typeof step0Schema>, string>>;

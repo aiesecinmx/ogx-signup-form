@@ -14,6 +14,7 @@
     "@emotion/styled": "^11.14.1",
     "@fontsource-variable/montserrat": "^5.2.8",
     "@fontsource/lato": "^5.2.7",
+    "@marsidev/react-turnstile": "^1.1.0",
     "@mui/icons-material": "^7.3.5",
     "@mui/material": "^7.3.5",
     "@ogx/shared": "workspace:*",

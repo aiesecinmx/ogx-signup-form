@@ -40,6 +40,7 @@ interface SignupState {
   englishProficiency: string;
   referralSource: string;
   program: 'GV' | 'GTa' | 'GTe' | '';
+  turnstileToken: string;
 
   // Navigation
   activeStep: number;
@@ -64,6 +65,7 @@ interface SignupState {
   setSchoolingLevel: (value: string) => void;
   setEnglishProficiency: (value: string) => void;
   setReferralSource: (value: string) => void;
+  setTurnstileToken: (value: string) => void;
   setErrors: (errors: Record<string, string>) => void;
   clearErrors: () => void;
   clearRegistrationError: () => void;
@@ -155,6 +157,7 @@ export const useSignupStore = create<SignupState>((set, get) => ({
   englishProficiency: "",
   referralSource: "",
   program: ((window as any).AIESEC_PROGRAM ?? '') as 'GV' | 'GTa' | 'GTe' | '',
+  turnstileToken: "",
 
   // Navigation
   activeStep: 0,
@@ -179,6 +182,7 @@ export const useSignupStore = create<SignupState>((set, get) => ({
   setSchoolingLevel: (value) => set({ schoolingLevel: value }),
   setEnglishProficiency: (value) => set({ englishProficiency: value }),
   setReferralSource: (value) => set({ referralSource: value }),
+  setTurnstileToken: (value) => set({ turnstileToken: value }),
   setErrors: (errors) => set({ errors }),
   clearErrors: () => set({ errors: {} }),
   clearRegistrationError: () => set({ registrationError: null }),
@@ -227,6 +231,7 @@ export const useSignupStore = create<SignupState>((set, get) => ({
       ...getStep0Payload(state),
       ...getStep1Payload(state),
       program: state.program,
+      turnstileToken: state.turnstileToken,
     };
 
     try {

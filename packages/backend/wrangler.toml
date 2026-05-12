@@ -12,3 +12,6 @@ required = ["TURNSTILE_SECRET_KEY"]
 [observability.logs]
 enabled = true
 invocation_logs = true
+
+[placement]
+mode = "smart"

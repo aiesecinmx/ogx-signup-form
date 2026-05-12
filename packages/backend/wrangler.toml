@@ -6,6 +6,9 @@ compatibility_date = "2024-12-01"
 AIESEC_COUNTRY_ID = "1589"
 EXPA_SIGNUP_URL = "https://auth.aiesec.org/users.json"
 
+[secrets]
+required = ["TURNSTILE_SECRET_KEY"]
+
 [observability.logs]
 enabled = true
 invocation_logs = true

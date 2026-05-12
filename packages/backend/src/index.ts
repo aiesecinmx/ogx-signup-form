@@ -7,7 +7,7 @@ import { verifyTurnstile } from "./turnstile";
 type Bindings = {
   EXPA_SIGNUP_URL: string;
   AIESEC_COUNTRY_ID: string;
-  TURNSTILE_SECRET_KEY?: string;
+  TURNSTILE_SECRET_KEY: string;
 };
 
 const ALLOWED_ORIGINS = [
@@ -32,12 +32,8 @@ app.post("/", async (c) => {
   const validation = await parseAndValidate(c.req.raw);
   if (!validation.ok) return c.json({ error: "Bad Request", errors: validation.errors }, 400);
 
-  if (c.env.TURNSTILE_SECRET_KEY) {
-    const captchaOk = await verifyTurnstile(validation.data.turnstileToken, c.env.TURNSTILE_SECRET_KEY);
-    if (!captchaOk) return c.json({ error: "Invalid captcha" }, 403);
-  } else {
-    console.warn("TURNSTILE_SECRET_KEY not set — skipping captcha verification");
-  }
+  const captchaOk = await verifyTurnstile(validation.data.turnstileToken, c.env.TURNSTILE_SECRET_KEY);
+  if (!captchaOk) return c.json({ error: "Invalid captcha" }, 403);
 
   const payload = buildExpaPayload(validation.data);
   const result = await postToExpa(c.env.EXPA_SIGNUP_URL, payload);

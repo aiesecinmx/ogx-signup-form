@@ -27,6 +27,7 @@ jobs:
         env:
           VITE_MX_SIGNUP_URL: ${{ vars.VITE_MX_SIGNUP_URL }}
           VITE_MX_ALIGNMENTS_URL: ${{ vars.VITE_MX_ALIGNMENTS_URL }}
+          VITE_TURNSTILE_SITE_KEY: ${{ vars.VITE_TURNSTILE_SITE_KEY }}
 
       - name: Assemble plugin
         run: |

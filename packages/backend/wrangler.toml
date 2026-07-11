@@ -9,6 +9,11 @@ EXPA_SIGNUP_URL = "https://auth.aiesec.org/users.json"
 [secrets]
 required = ["TURNSTILE_SECRET_KEY"]
 
+[[d1_databases]]
+binding = "DB"
+database_name = "prod-ogx-signups"
+database_id = "e0f7f9f7-df69-4f24-b279-30953d4a4f9f"
+
 [observability.logs]
 enabled = true
 invocation_logs = true

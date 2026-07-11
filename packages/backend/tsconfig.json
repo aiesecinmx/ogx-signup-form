@@ -3,6 +3,7 @@
   "compilerOptions": {
     "noEmit": true,
     "lib": ["ES2020"],
+    "types": ["node"],
   },
-  "include": ["src", "worker-configuration.d.ts"]
+  "include": ["src", "test", "worker-configuration.d.ts", "vitest.config.ts"]
 }

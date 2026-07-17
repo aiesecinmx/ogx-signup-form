@@ -1,0 +1,7 @@
+ALTER TABLE signups ADD COLUMN first_name TEXT NOT NULL DEFAULT '';
+ALTER TABLE signups ADD COLUMN last_name TEXT NOT NULL DEFAULT '';
+ALTER TABLE signups ADD COLUMN phone TEXT NOT NULL DEFAULT '';
+ALTER TABLE signups ADD COLUMN university_id INTEGER;
+ALTER TABLE signups ADD COLUMN university_alignment_id INTEGER;
+ALTER TABLE signups ADD COLUMN university_value TEXT;
+ALTER TABLE signups ADD COLUMN program TEXT NOT NULL DEFAULT '';

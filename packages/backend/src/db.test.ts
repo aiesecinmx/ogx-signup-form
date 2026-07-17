@@ -21,8 +21,16 @@ describe("insertSignup", () => {
       schooling_level: data.schoolingLevel,
       english_proficiency: data.englishProficiency,
       referral_source: data.referralSource,
+      first_name: data.firstName,
+      last_name: data.lastName,
+      phone: data.phone,
+      university_id: data.university!.id,
+      university_alignment_id: data.university!.alignment_id,
+      university_value: data.university!.value,
+      program: data.program,
       expa_status: null,
     });
+    expect(results[0]).not.toHaveProperty("password");
   });
 
   it("returns the id of the inserted row", async () => {

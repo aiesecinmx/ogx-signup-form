@@ -10,6 +10,7 @@ import ProfileStep from "./steps/ProfileStep";
 import SuccessModal from "./SuccessModal";
 import ErrorModal from "./ErrorModal";
 import DuplicateEmailModal from "./DuplicateEmailModal";
+import PendingModal from "./PendingModal";
 
 const sectionOneName = "Datos personales";
 const sectionTwoName = "Acerca de ti";
@@ -63,6 +64,7 @@ export default function SignupForm() {
       <SuccessModal />
       <ErrorModal />
       <DuplicateEmailModal />
+      <PendingModal />
     </div>
   );
 }

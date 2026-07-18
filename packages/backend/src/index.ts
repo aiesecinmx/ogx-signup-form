@@ -38,31 +38,27 @@ app.post("/", async (c) => {
   if (!captchaOk) return c.json({ error: "Invalid captcha" }, 403);
 
   const payload = buildExpaPayload(validation.data);
-  const [expaSettled, d1Settled] = await Promise.allSettled([
-    postToExpa(c.env.EXPA_SIGNUP_URL, payload),
-    insertSignup(c.env.DB, validation.data),
+  const [expaResult, d1Id] = await Promise.all([
+    postToExpa(c.env.EXPA_SIGNUP_URL, payload), // Assuming this functions handles all rejections beforehand
+    insertSignup(c.env.DB, validation.data).catch((err) => {
+      console.error("D1 signup insert failed:", err);
+      return null;
+    }),
   ]);
+  const expaStatus = expaResult.status;
 
-  const expaStatus = expaSettled.status === "fulfilled" ? expaSettled.value.status : 503;
-
-  if (d1Settled.status === "rejected") {
-    console.error("D1 signup insert failed:", d1Settled.reason);
-  } else {
+  if (d1Id) {
     c.executionCtx.waitUntil(
-      updateSignupExpaStatus(c.env.DB, d1Settled.value, expaStatus).catch((err) =>
+      updateSignupExpaStatus(c.env.DB, d1Id, expaStatus).catch((err) =>
         console.error("D1 EXPA status update failed:", err)
       )
     );
   }
 
-  if (expaSettled.status === "rejected") {
-    console.error("EXPA POST threw unexpectedly:", expaSettled.reason);
-    return c.json({ error: "Service Unavailable" }, 503);
-  }
-
   if (expaStatus === 201) return new Response(null, { status: 201 });
   if (expaStatus === 422) return c.json({ errors: { email: ["has already been taken"] } }, 422);
-  return c.json({ error: "Service Unavailable" }, 503);
+  if (d1Id === null) return c.json({ error: "Service Unavailable" }, 503);
+  return c.json({ status: "pending" }, 202);
 });
 
 export default app;

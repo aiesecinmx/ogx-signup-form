@@ -106,13 +106,13 @@ describe("POST /", () => {
     expect(results).toEqual([{ major: "Biology" }, { major: "Physics" }]);
   });
 
-  it("returns 503 when the EXPA request fails outright", async () => {
+  it("returns 202 when EXPA fails outright but the signup was saved to D1", async () => {
     stubFetch({ turnstileOk: true, expaStatus: "network-error" });
     const email = "expa-down@example.com";
 
     const res = await postSignup({ email });
 
-    expect(res.status).toBe(503);
+    expect(res.status).toBe(202);
     await expect(getExpaStatus(email)).resolves.toBe(503);
   });
 
@@ -125,5 +125,16 @@ describe("POST /", () => {
     const res = await postSignup({ email: "d1-down@example.com" });
 
     expect(res.status).toBe(201);
+  });
+
+  it("returns 503 when both EXPA and the D1 insert fail", async () => {
+    stubFetch({ turnstileOk: true, expaStatus: "network-error" });
+    vi.spyOn(env.DB, "prepare").mockImplementation(() => {
+      throw new Error("D1 unavailable");
+    });
+
+    const res = await postSignup({ email: "both-down@example.com" });
+
+    expect(res.status).toBe(503);
   });
 });

@@ -48,6 +48,7 @@ interface SignupState {
   registrationComplete: boolean;
   registrationError: string | null;
   duplicateEmail: boolean;
+  expaPending: boolean;
 
   // Validation
   errors: Record<string, string>;
@@ -70,6 +71,7 @@ interface SignupState {
   clearErrors: () => void;
   clearRegistrationError: () => void;
   clearDuplicateEmail: () => void;
+  clearExpaPending: () => void;
   goNext: () => void;
   goBack: () => void;
   setLoading: (value: boolean) => void;
@@ -165,6 +167,7 @@ export const useSignupStore = create<SignupState>((set, get) => ({
   registrationComplete: false,
   registrationError: null,
   duplicateEmail: false,
+  expaPending: false,
 
   // Validation
   errors: {},
@@ -187,6 +190,7 @@ export const useSignupStore = create<SignupState>((set, get) => ({
   clearErrors: () => set({ errors: {} }),
   clearRegistrationError: () => set({ registrationError: null }),
   clearDuplicateEmail: () => set({ duplicateEmail: false }),
+  clearExpaPending: () => set({ expaPending: false }),
   goNext: () => {
     const state = get();
     const result = step0Schema.safeParse(getStep0Payload(state));
@@ -217,6 +221,7 @@ export const useSignupStore = create<SignupState>((set, get) => ({
     registrationComplete: false,
     registrationError: null,
     duplicateEmail: false,
+    expaPending: false,
   }),
   submitForm: async () => {
     const state = get();
@@ -248,6 +253,11 @@ export const useSignupStore = create<SignupState>((set, get) => ({
 
       if (res.status === 422) {
         set({ loading: false, duplicateEmail: true });
+        return;
+      }
+
+      if (res.status === 202) {
+        set({ loading: false, expaPending: true });
         return;
       }
 
